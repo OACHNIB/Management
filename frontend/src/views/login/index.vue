@@ -145,20 +145,18 @@ const openForget=()=>{
                             }
 
                         }
+                    }
 
+                    .footer-go-register{
+                        font-size:12px;
+                        margin:12px 0;
+                        display:flex;
+                        justify-content: center;
 
-
-                        .footer-go-register{
+                        .go-register{
                             font-size:12px;
-                            margin:12px 0;
-                            display:flex;
-                            justify-content: center;
-
-                            .go-register{
-                                font-size:12px;
-                                color:#409eff;
-                                cursor:pointer;
-                            }
+                            color:#409eff;
+                            cursor:pointer;
                         }
                     }
 
