@@ -26,7 +26,7 @@
                                         </div>
                                     </div>
                                     <div class="footer-button">
-                                        <el-button type="primary">登录</el-button>
+                                        <el-button type="primary" @click="Login">登录</el-button>
                                     </div>
                                     <div class="footer-go-register">
                                         还没有账号？<span class="go-register">马上注册</span>
@@ -42,10 +42,10 @@
                                         <el-input v-model="registerData.password" placeholder="密码需长度6-12位含字母数字"/>
                                     </el-form-item>
                                     <el-form-item label="确认密码">
-                                        <el-input v-model="registerData.password" placeholder="请再次输入密码"/>
+                                        <el-input v-model="registerData.repassword" placeholder="请再次输入密码"/>
                                     </el-form-item>
                                     <div class="footer-button">
-                                        <el-button type="primary">注册</el-button>
+                                        <el-button type="primary" @click="Register">注册</el-button>
                                     </div>
                                 </el-form>
                             </el-tab-pane>
@@ -70,13 +70,20 @@
 
 <script lang="ts" setup>
 import { ref,reactive } from 'vue'
+import {ElMessage} from 'element-plus'
+import { useRouter } from 'vue-router'
 import forget from './components/forget_password.vue'
+import {
+    login,register
+}from '@/api/login'
+
 const activeName = ref('first')
+const router=useRouter()
 
 interface formData{
-    account:number;
+    account:number|null;
     password:string;
-    repassword ? :string;
+    repassword :string;
 }
 
 const loginData:formData=reactive({
@@ -89,6 +96,40 @@ const registerData:formData=reactive({
     password:'',
     repassword:'',
 })
+
+const Login=async ()=>{
+    const res=await login(loginData)
+    const {token}=res.data
+    if(res.data.message=="登录成功"){
+        ElMessage({
+            message: '登录成功',
+            type: 'success',
+        })
+        localStorage.setItem('token',token)
+        router.push('/home')
+    }else{
+        ElMessage.error('登录失败')
+    }
+}
+
+
+const Register=async ()=>{
+    if(registerData.password==registerData.repassword){
+        const res=await register(registerData)
+        if(res.data.message=="注册账号成功"){
+            ElMessage({
+                message: '注册成功',
+                type: 'success',
+            })
+            activeName.value='first'
+        }else{
+            ElMessage.error('注册失败，请检查格式是否正确')
+        }
+    }else{
+        ElMessage.error('两次密码不一致')
+    }
+
+}
 
 const forgetP=ref()
 

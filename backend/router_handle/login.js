@@ -64,7 +64,7 @@ exports.login=(req,res)=>{
     const sql='select * from users where account =?'
     db.query(sql,loginfo.account,(err,results)=>{
         if(err)return res.cc(err)
-        if(res.length!==1)return res.cc('登录失败')
+        if(results.length!==1)return res.cc('登录失败')
         //解密密码
     const compareResult=bcrypt.compareSync(loginfo.password,results[0].password)
     if(!compareResult){
@@ -87,7 +87,7 @@ exports.login=(req,res)=>{
         results:results[0],
         status:0,
         message:'登录成功',
-        token:'Bearer'+tokenStr,
+        token:'Bearer '+tokenStr,
     })
     })
 }
